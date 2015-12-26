@@ -31,6 +31,19 @@ def init_tables():
         )
     """
     cursor.execute(query)
+
+    query = "DROP TABLE IF EXISTS language"
+    cursor.execute(query)
+
+    query = """
+        CREATE TABLE IF NOT EXISTS language (
+        alpha3Code TEXT,
+        language TEXT,
+        UNIQUE (alpha3Code, language)
+        )
+    """
+    cursor.execute(query)
+
     conn.close()
 
 
@@ -42,20 +55,33 @@ def populate_tables():
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
-    base_query = """
-        INSERT INTO country
+    country_query = """
+        REPLACE INTO country
         (alpha3Code, name, capital, area, population, region, subregion) VALUES
         (:alpha3Code, :name, :capital, :area, :population, :region, :subregion)
     """
 
+    language_query = """
+        REPLACE INTO language
+        (alpha3Code, language) VALUES
+        (:alpha3Code, :language)
+    """
+
     for country in countries:
         try:
-            cursor.execute(base_query, country)
+            cursor.execute(country_query, country)
         except Exception as e:
             print e
+
+        for language in country['languages']:
+            try:
+                cursor.execute(language_query, {'alpha3Code': country['alpha3Code'], 'language': language})
+            except Exception as e:
+                print e
+
     conn.commit()
     conn.close()
 
 if __name__ == '__main__':
-    init_tables()
+    # init_tables()
     populate_tables()

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>Languages</h1>
+    </div>
+</div>
+
+<div class="container">
+    <ul>
+        {% for language in data %}
+            <li><h3><a href='/language/{{ language }}'>{{ language }}</a></h3></li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}
