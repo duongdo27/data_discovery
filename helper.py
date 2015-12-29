@@ -1,5 +1,4 @@
 import sqlite3
-import ipdb
 
 DB_FILE = 'countries.db'
 
