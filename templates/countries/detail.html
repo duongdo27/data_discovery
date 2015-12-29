@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>{{ data['name'] }}</h1>
+    </div>
+</div>
+
+<div class="container">
+    <h3 class="text-success">Capital: {{ data['capital'] }}</h3>
+    <h3 class="text-danger">Area: {{ data['area'] }} km<sup>2</sup></h3>
+    <h3 class="text-success">Population: {{ data['population'] }}</h3>
+    <h3 class="text-danger"> Region:
+        <a href="/countries/region/{{ data['region'] }}"> {{ data['region'] }} </a>
+    </h3>
+    <h3 class="text-success">Subregion: {{ data['subregion'] }}</h3>
+    <h3 class="text-danger">Languages:
+    {% for language in data['languages'] %}
+        <a href='/countries/language/{{ language }}'>{{ language }}</a>
+        {% if loop.index < data['languages']|length %},{% endif %}
+    {% endfor %}
+    </h3>
+    <h3 class="text-success">Neigbors:
+    {% for alpha3Code, name in data['borders'] %}
+        <a href="/countries/detail/{{ alpha3Code }}">{{ name }}</a>
+        {% if loop.index < data['borders']|length %},{% endif %}
+    {% endfor %}
+    </h3>
+</div>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>Top 10</h1>
+    </div>
+</div>
+
+<div class="container">
+    <h3 class="text-danger">By population</h3>
+    <ol>
+        {% for alpha3Code, name, population in data['top10population'] %}
+            <li><h3><a href='/countries/detail/{{ alpha3Code }}'>{{ name }}</a> ({{ population }})</h3></li>
+        {% endfor %}
+    </ol>
+
+    <hr>
+
+    <h3 class="text-danger">By area</h3>
+    <ol>
+        {% for alpha3Code, name, area in data['top10area'] %}
+            <li><h3><a href='/countries/detail/{{ alpha3Code }}'>{{ name }}</a> ({{ area }} km<sup>2</sup>)</h3></li>
+        {% endfor %}
+    </ol>
+
+    <hr>
+
+    <h3 class="text-danger">By density</h3>
+    <ol>
+        {% for alpha3Code, name, density in data['top10density'] %}
+            <li><h3><a href='/countries/detail/{{ alpha3Code }}'>{{ name }}</a> ({{ density }} per km<sup>2</sup>)</h3></li>
+        {% endfor %}
+    </ol>
+
+</div>
+
+{% endblock %}

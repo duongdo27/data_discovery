@@ -3,14 +3,14 @@
 {% block content %}
 <div class="jumbotron">
     <div class="container">
-        <h1>Regions</h1>
+        <h1>{{ title }}</h1>
     </div>
 </div>
 
 <div class="container">
     <ul>
-        {% for region in data %}
-            <li><h3><a href='/region/{{ region }}'>{{ region }}</a></h3></li>
+        {% for alpha3Code, name in data %}
+            <li><h3><a href='/countries/detail/{{ alpha3Code }}'>{{ name }}</a></h3></li>
         {% endfor %}
     </ul>
 </div>

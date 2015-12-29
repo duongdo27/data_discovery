@@ -44,6 +44,18 @@ def init_tables():
     """
     cursor.execute(query)
 
+    query = "DROP TABLE IF EXISTS border"
+    cursor.execute(query)
+
+    query = """
+        CREATE TABLE IF NOT EXISTS border (
+        alpha3Code TEXT,
+        border TEXT,
+        UNIQUE (alpha3Code, border)
+        )
+    """
+    cursor.execute(query)
+
     conn.close()
 
 
@@ -67,6 +79,12 @@ def populate_tables():
         (:alpha3Code, :language)
     """
 
+    border_query = """
+        REPLACE INTO border
+        (alpha3Code, border) VALUES
+        (:alpha3Code, :border)
+    """
+
     for country in countries:
         try:
             cursor.execute(country_query, country)
@@ -79,9 +97,15 @@ def populate_tables():
             except Exception as e:
                 print e
 
+        for border in country['borders']:
+            try:
+                cursor.execute(border_query, {'alpha3Code': country['alpha3Code'], 'border': border})
+            except Exception as e:
+                print e
+
     conn.commit()
     conn.close()
 
 if __name__ == '__main__':
-    # init_tables()
+    #init_tables()
     populate_tables()
