@@ -13,7 +13,7 @@ def index():
 
 
 @app.route('/countries/detail/<country_code>')
-def country(country_code):
+def countries_detail(country_code):
     data = Helper.get_country_detail(country_code)
     if data is None:
         abort(404)
@@ -21,14 +21,14 @@ def country(country_code):
 
 
 @app.route('/countries/all')
-def all():
+def countries_all():
     data = Helper.get_all_countries()
     title = 'All countries ({})'.format(len(data))
     return render_template('countries/list.html', data=data, title=title)
 
 
 @app.route('/countries/region/<region_name>')
-def region(region_name):
+def countries_region(region_name):
     data = Helper.get_countries_by_region(region_name)
     if data is None:
         abort(404)
@@ -37,13 +37,13 @@ def region(region_name):
 
 
 @app.route('/countries/regions')
-def regions():
+def countries_regions():
     data = Helper.get_regions()
     return render_template('countries/regions.html', data=data)
 
 
 @app.route('/countries/language/<language_name>')
-def language(language_name):
+def countries_language(language_name):
     data = Helper.get_countries_by_language(language_name)
     if data is None:
         abort(404)
@@ -52,13 +52,13 @@ def language(language_name):
 
 
 @app.route('/countries/languages')
-def languages():
+def countries_languages():
     data = Helper.get_languages()
     return render_template('countries/languages.html', data=data)
 
 
 @app.route('/countries/top')
-def top():
+def countries_top():
     data = Helper.get_top()
     return render_template('countries/top.html', data=data)
 
