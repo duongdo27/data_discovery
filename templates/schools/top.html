@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>Top 10</h1>
+    </div>
+</div>
+
+<div class="container">
+    <h3 class="text-danger">By size</h3>
+    <ol>
+        {% for id, name, size in data['top10size'] %}
+            <li><h3><a href='/schools/detail/{{ id }}'>{{ name }}</a> ({{ size }})</h3></li>
+        {% endfor %}
+    </ol>
+
+    <hr>
+
+    <h3 class="text-danger">By cost</h3>
+    <ol>
+        {% for id, name, cost in data['top10cost'] %}
+            <li><h3><a href='/schools/detail/{{ id }}'>{{ name }}</a> (${{ cost }})</h3></li>
+        {% endfor %}
+    </ol>
+
+</div>
+
+{% endblock %}

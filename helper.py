@@ -1,6 +1,7 @@
 import sqlite3
 
-DB_FILE = 'countries.db'
+COUNTRY_DB = 'countries.db'
+SCHOOL_DB = 'schools.db'
 
 
 class Helper(object):
@@ -10,7 +11,7 @@ class Helper(object):
         :param country_code:
         :return:
         """
-        conn = sqlite3.connect(DB_FILE)
+        conn = sqlite3.connect(COUNTRY_DB)
         cursor = conn.cursor()
 
         query = "SELECT * FROM country WHERE alpha3Code = :alpha3Code"
@@ -46,7 +47,7 @@ class Helper(object):
         """
         :return:
         """
-        conn = sqlite3.connect(DB_FILE)
+        conn = sqlite3.connect(COUNTRY_DB)
         cursor = conn.cursor()
 
         query = "SELECT alpha3Code, name FROM country ORDER BY name"
@@ -62,7 +63,7 @@ class Helper(object):
         :param region_name:
         :return:
         """
-        conn = sqlite3.connect(DB_FILE)
+        conn = sqlite3.connect(COUNTRY_DB)
         cursor = conn.cursor()
 
         query = "SELECT alpha3Code, name FROM country WHERE region = :region ORDER BY name"
@@ -76,11 +77,11 @@ class Helper(object):
         return result
 
     @staticmethod
-    def get_regions():
+    def get_country_regions():
         """
         :return:
         """
-        conn = sqlite3.connect(DB_FILE)
+        conn = sqlite3.connect(COUNTRY_DB)
         cursor = conn.cursor()
 
         query = "SELECT DISTINCT region FROM country WHERE region != '' ORDER BY region"
@@ -98,7 +99,7 @@ class Helper(object):
         :param language_name:
         :return:
         """
-        conn = sqlite3.connect(DB_FILE)
+        conn = sqlite3.connect(COUNTRY_DB)
         cursor = conn.cursor()
 
         query = """
@@ -118,11 +119,11 @@ class Helper(object):
         return result
 
     @staticmethod
-    def get_languages():
+    def get_contry_languages():
         """
         :return:
         """
-        conn = sqlite3.connect(DB_FILE)
+        conn = sqlite3.connect(COUNTRY_DB)
         cursor = conn.cursor()
 
         query = """
@@ -161,9 +162,9 @@ class Helper(object):
         return combine
 
     @staticmethod
-    def get_top():
+    def get_country_top():
         data = {}
-        conn = sqlite3.connect(DB_FILE)
+        conn = sqlite3.connect(COUNTRY_DB)
         cursor = conn.cursor()
 
         query = """
@@ -199,7 +200,61 @@ class Helper(object):
         conn.close()
         return data
 
+    @staticmethod
+    def get_school_detail(school_id):
+        conn = sqlite3.connect(SCHOOL_DB)
+        cursor = conn.cursor()
+
+        query = """
+            SELECT school.name, school.city, school.state, school.url, school.size, school.cost,
+            ownership.name as ownership, region.name as region, operating.name as operating
+            FROM school
+            JOIN ownership on school.ownership_id = ownership.id
+            JOIN region on school.region_id = region.id
+            JOIN operating on school.operating_id = operating.id
+            Where school.id = :id
+        """
+        cursor.execute(query, {'id': school_id})
+
+        result = cursor.fetchone()
+        columns = [x[0] for x in cursor.description]
+
+        if result is None:
+            return
+        data = {key: value for key, value in zip(columns, result)}
+        data['size'] = Helper.numeric_string(data['size']) if data['size'] else None
+        data['cost'] = "$" + Helper.numeric_string(data['cost']) if data['cost'] else None
+        return data
+
+    @staticmethod
+    def get_school_top():
+        data = {}
+        conn = sqlite3.connect(SCHOOL_DB)
+        cursor = conn.cursor()
+
+        query = """
+            SELECT id, name, size
+            FROM school
+            ORDER by size DESC
+            LIMIT 10
+        """
+        cursor.execute(query)
+        data['top10size'] = [(id, name, Helper.numeric_string(size))
+                             for id, name, size in cursor.fetchall()]
+
+        query = """
+            SELECT id, name, cost
+            FROM school
+            ORDER by cost DESC
+            LIMIT 10
+        """
+        cursor.execute(query)
+        data['top10cost'] = [(id, name, Helper.numeric_string(cost))
+                             for id, name, cost in cursor.fetchall()]
+
+        conn.close()
+        return data
 
 if __name__ == '__main__':
-    print Helper.get_top()
+    print Helper.get_school_detail(100654)
 

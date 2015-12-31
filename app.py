@@ -38,7 +38,7 @@ def countries_region(region_name):
 
 @app.route('/countries/regions')
 def countries_regions():
-    data = Helper.get_regions()
+    data = Helper.get_country_regions()
     return render_template('countries/regions.html', data=data)
 
 
@@ -53,15 +53,28 @@ def countries_language(language_name):
 
 @app.route('/countries/languages')
 def countries_languages():
-    data = Helper.get_languages()
+    data = Helper.get_contry_languages()
     return render_template('countries/languages.html', data=data)
 
 
 @app.route('/countries/top')
 def countries_top():
-    data = Helper.get_top()
+    data = Helper.get_country_top()
     return render_template('countries/top.html', data=data)
 
+
+@app.route('/schools/detail/<school_id>')
+def schools_detail(school_id):
+    data = Helper.get_school_detail(school_id)
+    if data is None:
+        abort(404)
+    return render_template('schools/detail.html', data=data)
+
+
+@app.route('/schools/top')
+def schools_top():
+    data = Helper.get_school_top()
+    return render_template('schools/top.html', data=data)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))

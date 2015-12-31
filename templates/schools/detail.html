@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>{{ data['name'] }}</h1>
+    </div>
+</div>
+
+<div class="container">
+    <h3 class="text-success">Website: {{ data['url'] }}</h3>
+    <h3 class="text-danger">City: {{ data['city'] }}</h3>
+    <h3 class="text-success">State: {{ data['state'] }}</h3>
+    <h3 class="text-danger">Region: {{ data['region'] }}</h3>
+    <h3 class="text-success">Size: {{ data['size'] }} students</h3>
+    <h3 class="text-danger">Cost: {{ data['cost'] }}</h3>
+    <h3 class="text-success">Operating: {{ data['operating'] }}</h3>
+    <h3 class="text-danger">Ownership: {{ data['ownership'] }}</h3>
+</div>
+
+{% endblock %}
