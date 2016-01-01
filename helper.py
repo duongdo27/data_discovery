@@ -255,6 +255,34 @@ class Helper(object):
         conn.close()
         return data
 
+    @staticmethod
+    def search_schools(form):
+        conn = sqlite3.connect(SCHOOL_DB)
+        cursor = conn.cursor()
+
+        query = """
+            SELECT id, name
+            FROM school
+            WHERE name LIKE :name
+        """
+        if form.state.data != "--":
+            query += "AND state = :state\n"
+        if form.ownership.data != "--":
+            query += "AND ownership_id = :ownership\n"
+        if form.operating.data != "--":
+            query += "AND operating_id = :operating\n"
+        if form.region.data != "--":
+            query += "AND region_id = :region\n"
+        query += "LIMIT 10"
+        cursor.execute(query, {'name': form.name.data + "%",
+                               'state': form.state.data,
+                               'ownership': form.ownership.data,
+                               'region': form.region.data})
+        data = cursor.fetchall()
+
+        conn.close()
+        return data
+
 if __name__ == '__main__':
-    print Helper.get_school_detail(100654)
+    pass
 

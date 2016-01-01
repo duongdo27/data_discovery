@@ -2,9 +2,13 @@ from flask import Flask, render_template, redirect, request, abort
 from flask_bootstrap import Bootstrap
 from helper import Helper
 import os
+from forms import SchoolSearchForm
 
 app = Flask(__name__)
 Bootstrap(app)
+
+app.config['CSRF_ENABLED'] = True
+app.config['SECRET_KEY'] = 'hello_world'
 
 
 @app.route('/')
@@ -75,6 +79,19 @@ def schools_detail(school_id):
 def schools_top():
     data = Helper.get_school_top()
     return render_template('schools/top.html', data=data)
+
+
+@app.route('/schools/search', methods=['GET', 'POST'])
+def school_search():
+    if request.method == 'GET':
+        form = SchoolSearchForm()
+        return render_template('schools/search.html', form=form, data=None)
+
+    else:
+        form = SchoolSearchForm(request.form)
+        data = Helper.search_schools(form)
+        return render_template('schools/search.html', form=form, data=data)
+
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))

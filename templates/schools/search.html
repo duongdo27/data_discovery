@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>Search</h1>
+        <form action="/schools/search" method="POST" role="form">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.name.label }}
+                {{ form.name(placeholder="School name", class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.region.label }}
+                {{ form.region(class="form-control") }}
+            </div>
+
+
+            <div class="form-group">
+                {{ form.state.label }}
+                {{ form.state(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.ownership.label }}
+                {{ form.ownership(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.operating.label }}
+                {{ form.operating(class="form-control") }}
+            </div>
+
+            <button type="submit" class="btn btn-success">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="container">
+    {% if data %}
+        <ul>
+            {% for id, name in data %}
+                <li><h3><a href='/schools/detail/{{ id }}'>{{ name }}</a></h3></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No school found</h3>
+    {% endif %}
+</div>
+
+{% endblock %}
