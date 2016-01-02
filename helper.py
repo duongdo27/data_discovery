@@ -1,7 +1,14 @@
 import sqlite3
+import requests
+from bokeh.plotting import figure
+from bokeh.resources import CDN
+from bokeh.embed import components
+from forms import METRIC_LOOKUP, COUNTRY_LOOKUP
 
 COUNTRY_DB = 'countries.db'
 SCHOOL_DB = 'schools.db'
+ENERGY_URL = 'http://api.eia.gov/series'
+API_KEY = 'E9693F9C41C748460B05C0DBEB9DACEA'
 
 
 class Helper(object):
@@ -283,6 +290,29 @@ class Helper(object):
         conn.close()
         return data
 
+    @staticmethod
+    def get_world_energy(form):
+        """
+        :param form:
+        :return:
+        """
+        series_id = form.metric.data.format(form.country.data)
+        params = {'api_key': API_KEY,
+                  'series_id': series_id}
+        raw_data = requests.get(ENERGY_URL, params=params).json()['series'][0]
+        x_data = [x[0] for x in raw_data['data']]
+        y_data = [x[1] for x in raw_data['data']]
+
+        title = '{}, {}, Annual'.format(METRIC_LOOKUP[form.metric.data], COUNTRY_LOOKUP[form.country.data])
+        fig = figure(title=title, plot_width=1000, plot_height=500)
+        fig.line(x_data, y_data)
+        fig.yaxis.axis_label = 'Amount [{}]'.format(raw_data['units'])
+        fig.xaxis.axis_label = 'Year'
+
+        fig_js, fig_div = components(fig, CDN)
+        return fig_js, fig_div
+
 if __name__ == '__main__':
-    pass
+    Helper.get_world_energy(1)
+
 

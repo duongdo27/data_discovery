@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, request, abort
 from flask_bootstrap import Bootstrap
 from helper import Helper
 import os
-from forms import SchoolSearchForm
+from forms import SchoolSearchForm, WorldEnergyForm
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -85,13 +85,24 @@ def schools_top():
 def school_search():
     if request.method == 'GET':
         form = SchoolSearchForm()
-        return render_template('schools/search.html', form=form, data=None)
+        return render_template('schools/search.html', form=form)
 
     else:
         form = SchoolSearchForm(request.form)
         data = Helper.search_schools(form)
         return render_template('schools/search.html', form=form, data=data)
 
+
+@app.route('/energy/world', methods=['GET', 'POST'])
+def energy_search():
+    if request.method == 'GET':
+        form = WorldEnergyForm()
+        return render_template('energy/world.html', form=form)
+
+    else:
+        form = WorldEnergyForm(request.form)
+        fig_js, fig_div = Helper.get_world_energy(form)
+        return render_template('energy/world.html', form=form, fig_js=fig_js, fig_div=fig_div)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
