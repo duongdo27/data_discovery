@@ -273,7 +273,7 @@ class Helper(object):
             query += "AND operating_id = :operating\n"
         if form.region.data != "--":
             query += "AND region_id = :region\n"
-        query += "LIMIT 10"
+
         cursor.execute(query, {'name': form.name.data + "%",
                                'state': form.state.data,
                                'ownership': form.ownership.data,

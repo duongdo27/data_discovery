@@ -39,7 +39,10 @@
 </div>
 
 <div class="container">
-    {% if data %}
+    {% if data is none %}
+        <h3>Choose criteria to search for schools</h3>
+    {% elif data %}
+        <h3>{{ data|length }} schools found</h3>
         <ul>
             {% for id, name in data %}
                 <li><h3><a href='/schools/detail/{{ id }}'>{{ name }}</a></h3></li>
