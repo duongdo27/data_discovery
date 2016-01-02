@@ -1,6 +1,5 @@
 backports-abc==0.4
 backports.ssl-match-hostname==3.5.0.1
-bokeh==0.10.0
 certifi==2015.11.20.1
 dominate==2.1.16
 Flask==0.10.1
