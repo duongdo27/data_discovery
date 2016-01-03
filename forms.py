@@ -6,8 +6,11 @@ SCHOOL_DB = 'schools.db'
 ENERGY_DB = 'energy.db'
 METRIC_CHOICES = [
     ('INTL.44-8-{}-MMTCD.A', 'CO2 Emissions'),
-    ('INTL.44-1-{}-TJ.A', 'Energy Production'),
-    ('INTL.44-2-{}-TJ.A', 'Energy Consumption'),
+    ('INTL.44-1-{}-QBTU.A', 'Energy Production'),
+    ('INTL.44-2-{}-QBTU.A', 'Energy Consumption'),
+    ('INTL.44-33-{}-MM.A', 'Population'),
+    ('INTL.45-2-{}-MBTUPP.A', 'Energy Consumption per capita'),
+    ('INTL.45-8-{}-MTCDPP.A', 'CO2 Emissions per capita')
 ]
 METRIC_LOOKUP = {k: v for k, v in METRIC_CHOICES}
 
