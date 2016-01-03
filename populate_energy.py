@@ -27,6 +27,18 @@ def init_tables():
         )
     """
     cursor.execute(query)
+
+    query = "DROP TABLE IF EXISTS state"
+    cursor.execute(query)
+
+    query = """
+        CREATE TABLE IF NOT EXISTS state (
+        code TEXT PRIMARY KEY,
+        name TEXT
+        )
+    """
+    cursor.execute(query)
+
     conn.close()
 
 
@@ -34,7 +46,7 @@ def populate_tables():
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
-    eneregy_query = """
+    country_query = """
         REPLACE INTO country
         (code, name) VALUES
         (:code, :name)
@@ -49,8 +61,25 @@ def populate_tables():
             'code': record['series_id'].split('-')[2],
             'name': ', '.join(record['name'].split(', ')[1:-1])
         }
-        cursor.execute(eneregy_query, data)
+        cursor.execute(country_query, data)
     conn.commit()
+
+    state_query = """
+        REPLACE INTO state
+        (code, name) VALUES
+        (:code, :name)
+    """
+    params = {'api_key': API_KEY,
+              'category_id': 40367}
+    records = requests.get(ENERGY_URL, params=params).json()['category']['childseries']
+    for record in records:
+        data = {
+            'code': record['series_id'].split('.')[2],
+            'name': record['name'].split(', ')[1]
+        }
+        cursor.execute(state_query, data)
+    conn.commit()
+
     conn.close()
 
 
