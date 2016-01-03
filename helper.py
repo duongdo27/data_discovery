@@ -1,9 +1,10 @@
 import sqlite3
 import requests
 from bokeh.plotting import figure
-from bokeh.resources import CDN
 from bokeh.embed import components
+from bokeh.models import HoverTool
 from forms import METRIC_LOOKUP, COUNTRY_LOOKUP
+from collections import OrderedDict
 
 COUNTRY_DB = 'countries.db'
 SCHOOL_DB = 'schools.db'
@@ -304,12 +305,21 @@ class Helper(object):
         y_data = [x[1] for x in raw_data['data']]
 
         title = '{}, {}, Annual'.format(METRIC_LOOKUP[form.metric.data], COUNTRY_LOOKUP[form.country.data])
-        fig = figure(title=title, plot_width=1000, plot_height=500)
+
+        fig = figure(title=title, plot_width=1000, plot_height=500,
+                     tools='pan,box_zoom,reset,resize,save,hover')
+        hover = fig.select(dict(type=HoverTool))
+        hover.tooltips = OrderedDict([
+            ("Value", "@y"),
+            ("Year", "@x")
+        ])
+
         fig.line(x_data, y_data)
+        fig.circle(x_data, y_data)
         fig.yaxis.axis_label = 'Amount [{}]'.format(raw_data['units'])
         fig.xaxis.axis_label = 'Year'
 
-        fig_js, fig_div = components(fig, CDN)
+        fig_js, fig_div = components(fig)
         return fig_js, fig_div
 
 if __name__ == '__main__':
