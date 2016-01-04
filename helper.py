@@ -3,7 +3,7 @@ import requests
 from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.models import HoverTool
-from forms import COUNTRY_METRIC_LOOKUP, COUNTRY_LOOKUP, STATE_METRIC_LOOKUP, STATE_LOOKUP
+from forms import COUNTRY_METRIC_LOOKUP, COUNTRY_LOOKUP, STATE_METRIC_LOOKUP, STATE_LOOKUP, ECONOMIC_METRIC_LOOKUP
 from collections import OrderedDict
 
 COUNTRY_DB = 'countries.db'
@@ -336,6 +336,37 @@ class Helper(object):
         y_data = [x[1] for x in raw_data['data']]
 
         title = '{}, {}, Annual'.format(STATE_METRIC_LOOKUP[form.metric.data], STATE_LOOKUP[form.state.data])
+
+        fig = figure(title=title, plot_width=1000, plot_height=500,
+                     tools='pan,box_zoom,reset,resize,save,hover')
+        hover = fig.select(dict(type=HoverTool))
+        hover.tooltips = OrderedDict([
+            ("Value", "@y"),
+            ("Year", "@x")
+        ])
+
+        fig.line(x_data, y_data)
+        fig.circle(x_data, y_data)
+        fig.yaxis.axis_label = 'Amount [{}]'.format(raw_data['units'])
+        fig.xaxis.axis_label = 'Year'
+
+        fig_js, fig_div = components(fig)
+        return fig_js, fig_div
+
+    @staticmethod
+    def get_economy(form):
+        """
+        :param form:
+        :return:
+        """
+        series_id = form.metric.data
+        params = {'api_key': API_KEY,
+                  'series_id': series_id}
+        raw_data = requests.get(ENERGY_URL, params=params).json()['series'][0]
+        x_data = [x[0] for x in raw_data['data']]
+        y_data = [x[1] for x in raw_data['data']]
+
+        title = '{}, Annual'.format(ECONOMIC_METRIC_LOOKUP[form.metric.data])
 
         fig = figure(title=title, plot_width=1000, plot_height=500,
                      tools='pan,box_zoom,reset,resize,save,hover')

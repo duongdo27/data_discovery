@@ -103,3 +103,21 @@ class StateEnergyForm(Form):
     state = SelectField('State', choices=STATE_CHOICES)
 
 
+# Economic form
+ECONOMIC_METRIC_CHOICES = [
+    ('STEO.XRUNR.A', 'Unemployment Rate'),
+    ('STEO.TREXRUS.A', 'Real export'),
+    ('STEO.TRIMRUS.A', 'Real import'),
+    ('STEO.GOVXRUS.A', 'Government expenditure'),
+    ('STEO.ZO324IUS.A', 'Petroleum and Coal Production'),
+    ('STEO.ZOTOIUS.A', 'Total Industrial Production'),
+    ('STEO.GDPDIUS.A', 'GDP Implicit Price Deflator'),
+    ('STEO.PRIMEUS.A', 'US Prime Lending Rate'),
+    ('STEO.RSPRPUS.A', 'Total Raw Steel'),
+    ('STEO.MVVMPUS.A', 'Vehicle Miles Travel'),
+    ('STEO.ACTKFUS.A', 'Airline Ticket Price'),
+]
+ECONOMIC_METRIC_LOOKUP = {k: v for k, v in ECONOMIC_METRIC_CHOICES}
+
+class USEconomyForm(Form):
+    metric = SelectField('Metric', choices=ECONOMIC_METRIC_CHOICES)
