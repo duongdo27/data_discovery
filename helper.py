@@ -9,8 +9,10 @@ from collections import OrderedDict
 COUNTRY_DB = 'countries.db'
 SCHOOL_DB = 'schools.db'
 ENERGY_URL = 'http://api.eia.gov/series'
-API_KEY = 'E9693F9C41C748460B05C0DBEB9DACEA'
+DATAGOV_API_KEY = 'LJGH3f7uhvxRQBSrKApmMO7e3TeuNmEyblQpucG8'
+EIA_API_KEY = 'E9693F9C41C748460B05C0DBEB9DACEA'
 NUTRITION_URL = 'http://api.nal.usda.gov/ndb/reports/'
+
 
 class Helper(object):
     @staticmethod
@@ -298,7 +300,7 @@ class Helper(object):
         :return:
         """
         series_id = form.metric.data.format(form.country.data)
-        params = {'api_key': API_KEY,
+        params = {'api_key': EIA_API_KEY,
                   'series_id': series_id}
         raw_data = requests.get(ENERGY_URL, params=params).json()['series'][0]
         x_data = [x[0] for x in raw_data['data']]
@@ -329,7 +331,7 @@ class Helper(object):
         :return:
         """
         series_id = form.metric.data.format(form.state.data)
-        params = {'api_key': API_KEY,
+        params = {'api_key': EIA_API_KEY,
                   'series_id': series_id}
         raw_data = requests.get(ENERGY_URL, params=params).json()['series'][0]
         x_data = [x[0] for x in raw_data['data']]
@@ -360,7 +362,7 @@ class Helper(object):
         :return:
         """
         series_id = form.metric.data
-        params = {'api_key': API_KEY,
+        params = {'api_key': EIA_API_KEY,
                   'series_id': series_id}
         raw_data = requests.get(ENERGY_URL, params=params).json()['series'][0]
         x_data = [x[0] for x in raw_data['data']]
@@ -389,7 +391,7 @@ class Helper(object):
         params = {
             'ndbno': ndbno,
             'format': 'json',
-            'api_key': 'DEMO_KEY'
+            'api_key': DATAGOV_API_KEY,
         }
         raw_data = requests.get(NUTRITION_URL, params=params).json()['report']['food']
 
@@ -408,7 +410,6 @@ class Helper(object):
                 data['nutrients'][record['group']].append(clean_record)
             else:
                 data['nutrients'][record['group']] = [clean_record]
-        print data
         return data
 
 
