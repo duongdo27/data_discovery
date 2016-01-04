@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>{{ data['name'] }}</h1>
+    </div>
+</div>
+
+<div class="container">
+    {% for group, block in data['nutrients'].iteritems() %}
+        <h2 class="text-danger">{{ group }}</h2>
+        <ul>
+            {% for record in block %}
+                <li><h3 class="text-info">{{ record['name'] }}: {{ record['value'] }} {{ record['unit'] }}</h3></li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</div>
+
+{% endblock %}

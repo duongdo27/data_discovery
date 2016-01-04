@@ -128,6 +128,14 @@ def economy_search():
         fig_js, fig_div = Helper.get_economy(form)
         return render_template('energy/economy.html', form=form, fig_js=fig_js, fig_div=fig_div)
 
+
+@app.route('/nutrition/detail/<ndbno>')
+def nutrition_detail(ndbno):
+    data = Helper.get_nutrition_detail(ndbno)
+    if data is None:
+        abort(404)
+    return render_template('nutrition/detail.html', data=data)
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)

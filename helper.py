@@ -10,7 +10,7 @@ COUNTRY_DB = 'countries.db'
 SCHOOL_DB = 'schools.db'
 ENERGY_URL = 'http://api.eia.gov/series'
 API_KEY = 'E9693F9C41C748460B05C0DBEB9DACEA'
-
+NUTRITION_URL = 'http://api.nal.usda.gov/ndb/reports/'
 
 class Helper(object):
     @staticmethod
@@ -384,7 +384,35 @@ class Helper(object):
         fig_js, fig_div = components(fig)
         return fig_js, fig_div
 
+    @staticmethod
+    def get_nutrition_detail(ndbno):
+        params = {
+            'ndbno': ndbno,
+            'format': 'json',
+            'api_key': 'DEMO_KEY'
+        }
+        raw_data = requests.get(NUTRITION_URL, params=params).json()['report']['food']
+
+        data = {
+            'name': raw_data['name'],
+            'nutrients': OrderedDict(),
+        }
+
+        for record in raw_data['nutrients']:
+            clean_record = {
+                'name': record['name'],
+                'unit': record['unit'],
+                'value': float(record['value']),
+            }
+            if record['group'] in data['nutrients']:
+                data['nutrients'][record['group']].append(clean_record)
+            else:
+                data['nutrients'][record['group']] = [clean_record]
+        print data
+        return data
+
+
 if __name__ == '__main__':
-    Helper.get_world_energy(1)
+    Helper.get_nutrition_detail(19303)
 
 
