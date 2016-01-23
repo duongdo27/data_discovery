@@ -119,5 +119,10 @@ ECONOMIC_METRIC_CHOICES = [
 ]
 ECONOMIC_METRIC_LOOKUP = {k: v for k, v in ECONOMIC_METRIC_CHOICES}
 
+
 class USEconomyForm(Form):
     metric = SelectField('Metric', choices=ECONOMIC_METRIC_CHOICES)
+
+
+class NutritionForm(Form):
+    nutrition = StringField('Nutrient')

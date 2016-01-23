@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>Search</h1>
+        <form action="/nutrition/search" method="POST" role="form">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.nutrition.label }}
+                {{ form.nutrition(placeholder="Nutrition", class="form-control") }}
+            </div>
+
+            <button type="submit" class="btn btn-success">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="container">
+    {% if data is none %}
+        <h3>Choose criteria to search for nutrition</h3>
+    {% elif data %}
+        <ul>
+            {% for ndbno, name in data %}
+                <li><h3><a href='/nutrition/detail/{{ ndbno }}'>{{ name }}</a></h3></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No nutrition found</h3>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -12,6 +12,7 @@ ENERGY_URL = 'http://api.eia.gov/series'
 DATAGOV_API_KEY = 'LJGH3f7uhvxRQBSrKApmMO7e3TeuNmEyblQpucG8'
 EIA_API_KEY = 'E9693F9C41C748460B05C0DBEB9DACEA'
 NUTRITION_URL = 'http://api.nal.usda.gov/ndb/reports/'
+NUTRITION_SEARCH_URL = 'http://api.nal.usda.gov/ndb/search/'
 
 
 class Helper(object):
@@ -410,6 +411,21 @@ class Helper(object):
                 data['nutrients'][record['group']].append(clean_record)
             else:
                 data['nutrients'][record['group']] = [clean_record]
+        return data
+
+    @staticmethod
+    def get_nutrition(form):
+        params = {
+            'format': 'json',
+            'q': form.nutrition.data,
+            'max': 25,
+            'api_key': DATAGOV_API_KEY,
+        }
+        try:
+            raw_data = requests.get(NUTRITION_SEARCH_URL, params=params).json()['list']['item']
+        except:
+            return []
+        data = [(x['ndbno'], x['name']) for x in raw_data]
         return data
 
 
